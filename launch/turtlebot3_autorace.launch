@@ -1,0 +1,63 @@
+<launch>
+  <env name="GAZEBO_RESOURCE_PATH" value="$(find Final_Project_661)/models/turtlebot3_autorace/ground_picture" />
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find Final_Project_661)/worlds/map.world" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>  
+
+  <!-- BEGIN ROBOT 1-->
+  <!--group ns="robot1">
+    <param name="tf_prefix" value="robot1_tf" />
+    <include file="$(find Final_Project_661)/launch/bot.launch" >
+      <arg name="model_name" value="robot1" />
+      <arg name="x_pos" value="-4.0" />
+      <arg name="y_pos" value="-4.0" />
+      <arg name="z_pos" value="0" />
+    </include>
+  </group-->
+
+  <!-- BEGIN ROBOT 2-->
+  
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro laser_visual:=false" />
+  
+  <group ns="robot1">
+    <param name="tf_prefix" value="explorer_tf" />
+    <include file="$(find Final_Project_661)/launch/bot.launch" >
+      <arg name="init_pose" value="-x -4 -y -4.0 -z 0 " />
+      <arg name="robot_name"  value="robot1" />
+    </include>
+  </group>
+
+  <!-- follower robot-->
+  <group ns="robot2">
+    <param name="tf_prefix" value="follower_tf" />
+    <include file="$(find Final_Project_661)/launch/bot.launch" >
+      <arg name="init_pose" value="-x -0 -y -4.0 -z 0 " />
+      <arg name="robot_name"  value="robot2" />
+    </include>
+  </group>
+
+  <group ns="robot3">
+    <param name="tf_prefix" value="follower_tf" />
+    <include file="$(find Final_Project_661)/launch/bot.launch" >
+      <arg name="init_pose" value="-x 4.0 -y -4.0 -z 0" />
+      <arg name="robot_name"  value="robot3" />
+    </include>
+  </group>
+
+  <node 
+	    pkg = "Final_Project_661" 
+	    type = "navigator_main.py"
+	    name = "nav_main"
+	    output = "screen"
+	 />
+  <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find final_project)/rviz/turtlebot3_gazebo_model.rviz"/-->
+
+</launch>
+
+
